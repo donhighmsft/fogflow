@@ -89,6 +89,43 @@ app.get('/proxy', function(req, res){
 });
 
 //DGraph
+
+function updateContext(ctxObj) {
+        contextElement = JSONObject2CtxElement(ctxObj);
+
+        var updateCtxReq = {};
+        updateCtxReq.contextElements = [];
+        updateCtxReq.contextElements.push(contextElement)
+        updateCtxReq.updateAction = 'UPDATE'
+
+                console.log(updateCtxReq);
+};
+
+function JSONObject2CtxElement(ob) {
+    console.log('convert json object to context element')
+    var contextElement = {};
+
+    contextElement.entityId = ob.entityId;
+
+    contextElement.attributes = [];
+    if(ob.attributes) {
+        for( key in ob.attributes ) {
+            attr = ob.attributes[key];
+            contextElement.attributes.push({name: key, type: attr.type, value: attr.value});
+        }
+    }
+
+    contextElement.domainMetadata = [];
+    if(ob.metadata) {
+        for( key in ob.metadata ) {
+            meta = ob.metadata[key];
+            contextElement.domainMetadata.push({name: key, type: meta.type, value: meta.value});
+        }
+    }
+
+    return contextElement;
+}
+
 app.use (bodyParser.json());
 app.post('/ngsi10/updateContext', function (req, res) {
  console.log(req.body.contextElements);
